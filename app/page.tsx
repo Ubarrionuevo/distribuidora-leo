@@ -1,103 +1,529 @@
-import Image from "next/image";
+"use client"
+
+import { useState, useEffect, useRef } from "react"
+import { Menu, Search, X, Clock, MapPin, Phone, ArrowRight, ExternalLink } from "lucide-react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { useRouter } from "next/navigation"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { CartButton } from "@/components/cart-button"
+import { FloatingCartButton } from "@/components/floating-cart-button"
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [showResults, setShowResults] = useState(false)
+  const [isHoursModalOpen, setIsHoursModalOpen] = useState(false)
+  const searchRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Function to handle search
+  const handleSearch = () => {
+    if (searchQuery.trim() === "") {
+      setSearchResults([])
+      setShowResults(false)
+      return
+    }
+
+    // Search through all categories and products
+    const query = searchQuery.toLowerCase()
+    const matchingCategories = categories.filter((category) => category.name.toLowerCase().includes(query))
+
+    if (matchingCategories.length > 0) {
+      // If we find a matching category, navigate to it
+      router.push(`/category/${matchingCategories[0].slug}`)
+      setIsSearchOpen(false)
+      setSearchQuery("")
+      return
+    }
+
+    // If no categories match, we could implement product search here
+    // For now, just close the search
+    setIsSearchOpen(false)
+    setSearchQuery("")
+  }
+
+  // Close search when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
+
+  return (
+    <div className="flex min-h-screen flex-col bg-white pb-20">
+      {/* Header */}
+      <header className="w-full border-b bg-white text-zinc-900">
+        <div className="container mx-auto px-4 sm:px-6 flex h-14 items-center justify-between">
+          {/* Mobile Menu - Only visible on mobile */}
+          <div className="lg:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-zinc-900 -ml-2">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[300px] bg-white p-0">
+                <SheetHeader className="p-4 pb-2">
+                  <SheetTitle>Menú Principal</SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col p-4">
+                  <Link href="/" className="py-2 text-zinc-600 hover:text-zinc-900 transition-colors">
+                    Inicio
+                  </Link>
+                  <Link href="/cart" className="py-2 text-zinc-600 hover:text-zinc-900 transition-colors">
+                    Mi Carrito
+                  </Link>
+                  <Link href="#" className="py-2 text-zinc-600 hover:text-zinc-900 transition-colors">
+                    Mis Pedidos
+                  </Link>
+                  <Link href="#" className="py-2 text-zinc-600 hover:text-zinc-900 transition-colors">
+                    Contacto
+                  </Link>
+
+                  <div className="mt-6 pt-6 border-t border-zinc-200">
+                    <div className="flex items-start mb-4">
+                      <MapPin className="h-5 w-5 text-[#e63946] mr-2 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h3 className="font-medium text-zinc-900 mb-1">Ubicación</h3>
+                        <p className="text-sm text-zinc-600 mb-1">Av. San Martín 1234, Ciudad</p>
+                        <p className="text-sm text-zinc-600">Mendoza, Argentina</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start mb-4">
+                      <Clock className="h-5 w-5 text-[#e63946] mr-2 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h3 className="font-medium text-zinc-900 mb-1">Horarios de Atención</h3>
+                        <p className="text-sm text-zinc-600">Lunes a Viernes: 8 a 18 hs</p>
+                        <p className="text-sm text-zinc-600">Sábados: 8 a 13 hs</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start mb-4">
+                      <Phone className="h-5 w-5 text-[#e63946] mr-2 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h3 className="font-medium text-zinc-900 mb-1">Contacto</h3>
+                        <p className="text-sm text-zinc-600">Tel: (261) 123-4567</p>
+                        <p className="text-sm text-zinc-600">info@distribuidoraleo.com</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 pt-6 border-t border-zinc-200">
+                    <a
+                      href="https://1minuto.vercel.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-full py-3 px-4 bg-[#e63946] hover:bg-[#d62b39] text-white text-center font-medium rounded-md transition-colors"
+                    >
+                      <span className="mr-2">Quiero una tienda como esta para mi negocio</span>
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Logo */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-2">
+            <Link href="/" className="flex items-center">
+              <div className="flex items-center whitespace-nowrap">
+                <span className="font-bold text-lg sm:text-xl text-[#e63946]">DISTRIBUIDORA</span>
+                <span className="font-bold text-lg sm:text-xl text-zinc-900 ml-1">LEO</span>
+              </div>
+            </Link>
+          </div>
+
+          {/* Desktop Navigation - Only visible on desktop */}
+          <nav className="hidden lg:flex items-center space-x-6">
+            <Link href="/" className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors">
+              Inicio
+            </Link>
+            <Link href="/cart" className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors">
+              Mi Carrito
+            </Link>
+            <Link href="#" className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors">
+              Mis Pedidos
+            </Link>
+            <Link href="#" className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors">
+              Contacto
+            </Link>
+          </nav>
+
+          {/* Search and Cart */}
+          <div className="flex items-center space-x-1">
+            {isSearchOpen ? (
+              <div className="relative flex items-center" ref={searchRef}>
+                <input
+                  type="search"
+                  placeholder="Buscar..."
+                  className="h-8 w-[180px] rounded-md border border-zinc-200 bg-white px-3 py-1 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#e63946]"
+                  autoFocus
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearch()
+                    }
+                  }}
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 text-zinc-400 hover:text-zinc-900 h-8 w-8"
+                  onClick={() => {
+                    setIsSearchOpen(false)
+                    setSearchQuery("")
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-zinc-400 hover:text-zinc-900 h-8 w-8"
+                onClick={() => setIsSearchOpen(true)}
+              >
+                <Search className="h-4 w-4" />
+                <span className="sr-only">Search</span>
+              </Button>
+            )}
+            <CartButton />
+          </div>
         </div>
+      </header>
+
+      {/* Status Banner */}
+      <Dialog open={isHoursModalOpen} onOpenChange={setIsHoursModalOpen}>
+        <DialogTrigger asChild>
+          <div className="bg-red-50 text-red-900 cursor-pointer hover:bg-red-100 transition-colors">
+            <div className="container py-2 px-4 flex items-center justify-center text-center">
+              <Clock className="h-4 w-4 flex-shrink-0 mr-2" />
+              <div>
+                <p className="font-medium">Lista de precios actualizada: 20/03/25</p>
+                <p className="text-sm">Hacé click para consultar nuestros horarios</p>
+              </div>
+            </div>
+          </div>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Horarios de Atención</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="bg-red-50 p-3 rounded-md">
+                <h3 className="font-medium text-zinc-900">Lunes a Viernes</h3>
+                <p className="text-zinc-600">8:00 a 18:00 hs</p>
+              </div>
+              <div className="bg-red-50 p-3 rounded-md">
+                <h3 className="font-medium text-zinc-900">Sábados</h3>
+                <p className="text-zinc-600">8:00 a 13:00 hs</p>
+              </div>
+            </div>
+            <div className="bg-red-50 p-3 rounded-md text-center">
+              <h3 className="font-medium text-zinc-900">Domingos y Feriados</h3>
+              <p className="text-zinc-600">Cerrado</p>
+            </div>
+            <div className="pt-2 text-center text-sm text-zinc-500">
+              Para consultas fuera de horario, puede enviarnos un mensaje por WhatsApp al (261) 123-4567
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Search Dialog */}
+      <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Buscar Productos</DialogTitle>
+          </DialogHeader>
+          <div className="relative" ref={searchRef}>
+            <input
+              type="search"
+              placeholder="Buscar..."
+              className="h-8 w-[180px] rounded-md border border-zinc-200 bg-white px-3 py-1 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#e63946]"
+              autoFocus
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch()
+                }
+              }}
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-0 text-zinc-400 hover:text-zinc-900 h-8 w-8"
+              onClick={() => {
+                setIsSearchOpen(false)
+                setSearchQuery("")
+              }}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <main className="flex-1 bg-zinc-50">
+        {/* Categories */}
+        <section className="py-6">
+          <div className="container px-4 flex justify-center">
+            <div className="w-full max-w-6xl">
+              <h2 className="text-xl font-bold mb-4 text-zinc-900 text-center">Categorías</h2>
+              <div className="flex flex-col space-y-3 lg:space-y-0 lg:grid lg:grid-cols-3 xl:grid-cols-4 lg:gap-4">
+                {categories.map((category) => (
+                  <CategoryCard key={category.id} category={category} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Desktop Info Section */}
+        <section className="hidden lg:block py-12 bg-white border-t">
+          <div className="container px-4">
+            <div className="max-w-6xl mx-auto grid grid-cols-3 gap-8">
+              <div className="flex items-start">
+                <MapPin className="h-6 w-6 text-[#e63946] mr-3 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-medium text-zinc-900 mb-2">Ubicación</h3>
+                  <p className="text-sm text-zinc-600 mb-1">Av. San Martín 1234, Ciudad</p>
+                  <p className="text-sm text-zinc-600">Mendoza, Argentina</p>
+                </div>
+              </div>
+
+              <div className="flex items-start">
+                <Clock className="h-6 w-6 text-[#e63946] mr-3 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-medium text-zinc-900 mb-2">Horarios de Atención</h3>
+                  <p className="text-sm text-zinc-600">Lunes a Viernes: 8 a 18 hs</p>
+                  <p className="text-sm text-zinc-600">Sábados: 8 a 13 hs</p>
+                </div>
+              </div>
+
+              <div className="flex items-start">
+                <Phone className="h-6 w-6 text-[#e63946] mr-3 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-medium text-zinc-900 mb-2">Contacto</h3>
+                  <p className="text-sm text-zinc-600">Tel: (261) 123-4567</p>
+                  <p className="text-sm text-zinc-600">info@distribuidoraleo.com</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Desktop CTA Section */}
+        <section className="hidden lg:block py-8 bg-zinc-50">
+          <div className="container px-4">
+            <div className="max-w-6xl mx-auto">
+              <a
+                href="https://1minuto.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-full py-4 px-6 bg-[#e63946] hover:bg-[#d62b39] text-white text-center font-medium rounded-md transition-colors"
+              >
+                <span className="mr-2">Quiero una tienda como esta para mi negocio</span>
+                <ExternalLink className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+      <FloatingCartButton />
     </div>
-  );
+  )
 }
+
+interface Category {
+  id: number
+  name: string
+  image: string
+  slug: string
+  emoji: string
+}
+
+const categories: Category[] = [
+  {
+    id: 1,
+    name: "Cervezas",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "cervezas",
+    emoji: "🍻",
+  },
+  {
+    id: 2,
+    name: "Gaseosas",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "gaseosas",
+    emoji: "🥤",
+  },
+  {
+    id: 3,
+    name: "Saborizadas y Jugos",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "saborizadas-jugos",
+    emoji: "🧃",
+  },
+  {
+    id: 4,
+    name: "Aguas y Sodas",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "aguas-sodas",
+    emoji: "🫗",
+  },
+  {
+    id: 5,
+    name: "Aperitivos",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "aperitivos",
+    emoji: "🍹",
+  },
+  {
+    id: 6,
+    name: "Espumantes y Whisky",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "espumantes-whisky",
+    emoji: "🍾",
+  },
+  {
+    id: 7,
+    name: "Energizantes",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "energizantes",
+    emoji: "🪫",
+  },
+  {
+    id: 8,
+    name: "Vinos",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "vinos",
+    emoji: "🍷",
+  },
+  {
+    id: 9,
+    name: "Yerbas",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "yerbas",
+    emoji: "🧉",
+  },
+  {
+    id: 10,
+    name: "Harina",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "harina",
+    emoji: "🥖",
+  },
+  {
+    id: 11,
+    name: "Puré de Tomate",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "pure-tomate",
+    emoji: "🍅",
+  },
+  {
+    id: 12,
+    name: "Arroz",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "arroz",
+    emoji: "🍚",
+  },
+  {
+    id: 13,
+    name: "Fideos",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "fideos",
+    emoji: "🍝",
+  },
+  {
+    id: 14,
+    name: "Panificados",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "panificados",
+    emoji: "🍞",
+  },
+  {
+    id: 15,
+    name: "Galletitas",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "galletitas",
+    emoji: "🍪",
+  },
+  {
+    id: 16,
+    name: "Snacks y Golosinas",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "snacks-golosinas",
+    emoji: "🥔",
+  },
+  {
+    id: 17,
+    name: "Papeles",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "papeles",
+    emoji: "🧻",
+  },
+  {
+    id: 18,
+    name: "Limpieza y Perfumería",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "limpieza-perfumeria",
+    emoji: "🧼",
+  },
+  {
+    id: 19,
+    name: "Otros",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "otros",
+    emoji: "💥",
+  },
+  {
+    id: 20,
+    name: "Electrodomésticos",
+    image: "/placeholder.svg?height=400&width=600",
+    slug: "electrodomesticos",
+    emoji: "🔌",
+  },
+]
+
+function CategoryCard({ category }: { category: Category }) {
+  return (
+    <Link
+      href={`/category/${category.slug}`}
+      className="group relative overflow-hidden rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full h-[120px] lg:h-[200px]"
+    >
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
+      </div>
+      <div className="relative h-full p-4 lg:p-6 flex flex-col justify-between">
+        <h3 className="text-lg lg:text-xl font-medium text-white flex items-center">
+          <span className="mr-2 text-xl lg:text-3xl">{category.emoji}</span> {category.name}
+        </h3>
+        <div className="flex justify-end">
+          <div className="bg-[#e63946] text-white text-sm px-3 py-1 lg:px-4 lg:py-2 rounded-full flex items-center gap-1 group-hover:bg-[#d62b39] transition-colors">
+            Ver más <ArrowRight className="h-4 w-4" />
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
