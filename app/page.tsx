@@ -295,57 +295,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Desktop Info Section */}
-        <section className="hidden lg:block py-12 bg-white border-t">
-          <div className="container px-4">
-            <div className="max-w-6xl mx-auto grid grid-cols-3 gap-8">
-              <div className="flex items-start">
-                <MapPin className="h-6 w-6 text-[#e63946] mr-3 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-medium text-zinc-900 mb-2">Ubicación</h3>
-                  <p className="text-sm text-zinc-600 mb-1">Av. San Martín 1234, Ciudad</p>
-                  <p className="text-sm text-zinc-600">Mendoza, Argentina</p>
-                </div>
-              </div>
-
-              <div className="flex items-start">
-                <Clock className="h-6 w-6 text-[#e63946] mr-3 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-medium text-zinc-900 mb-2">Horarios de Atención</h3>
-                  <p className="text-sm text-zinc-600">Lunes a Viernes: 8 a 18 hs</p>
-                  <p className="text-sm text-zinc-600">Sábados: 8 a 13 hs</p>
-                </div>
-              </div>
-
-              <div className="flex items-start">
-                <Phone className="h-6 w-6 text-[#e63946] mr-3 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-medium text-zinc-900 mb-2">Contacto</h3>
-                  <p className="text-sm text-zinc-600">Tel: (261) 123-4567</p>
-                  <p className="text-sm text-zinc-600">info@distribuidoraleo.com</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Desktop CTA Section */}
-        <section className="hidden lg:block py-8 bg-zinc-50">
-          <div className="container px-4">
-            <div className="max-w-6xl mx-auto">
-              <a
-                href="https://1minuto.vercel.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-full py-4 px-6 bg-[#e63946] hover:bg-[#d62b39] text-white text-center font-medium rounded-md transition-colors"
-              >
-                <span className="mr-2">Quiero una tienda como esta para mi negocio</span>
-                <ExternalLink className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
-        </section>
       </main>
 
       <FloatingCartButton />
@@ -511,7 +460,245 @@ function CategoryCard({ category }: { category: Category }) {
       className="group relative overflow-hidden rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full h-[120px] lg:h-[200px]"
     >
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
+        {category.slug === "cervezas" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1608270586620-248524c67de9?q=80&w=2070&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "gaseosas" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?q=80&w=1974&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "saborizadas-jugos" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1600271886742-f049cd451bba?q=80&w=2187&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "aguas-sodas" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1560023907-5f339617ea30?q=80&w=2070&auto=format&fit=crop')`
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "aperitivos" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1598373187432-c1ff06874ce8?q=80&w=2070&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "espumantes-whisky" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1569529465841-dfecdab7503b?q=80&w=2070&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "energizantes" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=2070&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "vinos" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?q=80&w=1974&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "pure-tomate" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1546554137-f86b9593a222?q=80&w=2067&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "arroz" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=2070&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "fideos" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1603729362753-f8162ac6c3df?q=80&w=1974&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "panificados" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2072&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "galletitas" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1999&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "snacks-golosinas" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1621939514649-280e2ee25f60?q=80&w=2070&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "papeles" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1584556812952-905ffd0c611a?q=80&w=2070&auto=format&fit=crop')`
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "limpieza-perfumeria" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1563453392212-326f5e854473?q=80&w=2070&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "electrodomesticos" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1601598851547-4302969d0614?q=80&w=1964&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "otros" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?q=80&w=2069&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "yerbas" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1573739022854-abceaeb585dc?q=80&w=1974&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : category.slug === "harina" ? (
+          <>
+            <div 
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=2070&auto=format&fit=crop')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
+        )}
       </div>
       <div className="relative h-full p-4 lg:p-6 flex flex-col justify-between">
         <h3 className="text-lg lg:text-xl font-medium text-white flex items-center">
