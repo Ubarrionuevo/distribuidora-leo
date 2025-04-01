@@ -13,13 +13,17 @@ import { FloatingCartButton } from "@/components/floating-cart-button"
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [showResults, setShowResults] = useState(false)
+  const [isHoursModalOpen, setIsHoursModalOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-  const [isHoursModalOpen, setIsHoursModalOpen] = useState(false)
 
   // Function to handle search
   const handleSearch = () => {
     if (searchQuery.trim() === "") {
+      setSearchResults([])
+      setShowResults(false)
       return
     }
 
