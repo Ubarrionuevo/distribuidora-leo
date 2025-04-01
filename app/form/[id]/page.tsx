@@ -42,7 +42,7 @@ export default function FormPage({ params }: { params: { id: string } }) {
   })
 
   // Handle form changes
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
