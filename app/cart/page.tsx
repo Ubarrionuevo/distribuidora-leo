@@ -28,7 +28,7 @@ export default function CartPage() {
   })
 
   // Handle form changes
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 

@@ -11,17 +11,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  items: Array<{
-    id: string;
-    quantity: number;
-  }>;
-}
-
 export default function FormPage({ params }: { params: { id: string } }) {
   // Find the product by ID
   const productId = Number.parseInt(params.id)
@@ -42,7 +31,7 @@ export default function FormPage({ params }: { params: { id: string } }) {
   })
 
   // Handle form changes
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -88,7 +77,7 @@ S: 8 a 13 hs`
   }
 
   // Handle form submission
-  const handleSubmit = (data: FormData) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const phoneNumber = "5491112345678" // Replace with your actual WhatsApp number
     const message = formatWhatsAppMessage()

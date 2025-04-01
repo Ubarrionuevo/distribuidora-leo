@@ -10,13 +10,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { CartButton } from "@/components/cart-button"
 import { FloatingCartButton } from "@/components/floating-cart-button"
 
-interface SearchResult {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-}
-
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
