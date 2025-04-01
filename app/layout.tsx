@@ -8,7 +8,7 @@ import { SonnerProvider } from "@/components/sonner-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "DISTRIBUIDORA LEO - Mayorista de bebidas y alimentos",
+  title: "DISTRIBUIDORAA LEO - Mayorista de bebidas y alimentos",
   description: "Catálogo digital de productos mayoristas - Bebidas, alimentos, limpieza y más",
 }
 
