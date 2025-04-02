@@ -6,7 +6,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Plus, Minus, Trash2, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useCart } from "@/context/cart-context"
+import { useCart, CartItem } from "@/context/cart-context"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -30,7 +30,7 @@ export default function CartPage() {
     let message = `Pedido - DISTRIBUIDORA LEO:\n\n`
 
     // Add each item to the message
-    items.forEach((item) => {
+    items.forEach((item: CartItem) => {
       message += `⚪ ${item.name} x ${item.quantity} = $${(item.price * item.quantity).toLocaleString("es-AR")}\n`
     })
 
