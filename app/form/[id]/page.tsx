@@ -54,12 +54,10 @@ ${product.name} x ${quantity} = $${(product.price * quantity).toLocaleString("es
 Precio Total: $${(product.price * quantity).toLocaleString("es-AR")}
 
 Método de Pago:
-${formData.paymentMethod === "transferencia" ? "✓" : ""}Transferencia
-${formData.paymentMethod === "efectivo" ? "✓" : ""}Efectivo
+${formData.paymentMethod === "transferencia" ? "Transferencia" : "Efectivo"}
 
 Método de Entrega:
-${formData.deliveryMethod === "retiro" ? "✓" : ""}Retiro en local
-${formData.deliveryMethod === "envio" ? "✓" : ""}Envío a domicilio
+${formData.deliveryMethod === "retiro" ? "Retiro en local" : "Envío a domicilio"}
 
 ${
   formData.additionalInfo
@@ -68,10 +66,7 @@ ${formData.additionalInfo}
 
 `
     : ""
-}
-Horario
-L a V: 8 a 18 hs
-S: 8 a 13 hs`
+}`
 
     return encodeURIComponent(message)
   }

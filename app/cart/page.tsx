@@ -37,18 +37,14 @@ export default function CartPage() {
     message += `\nPrecio Total: $${totalPrice.toLocaleString("es-AR")}\n\n`
 
     message += `Método de Pago:\n`
-    message += `${formData.paymentMethod === "transferencia" ? "✓" : ""}Transferencia\n`
-    message += `${formData.paymentMethod === "efectivo" ? "✓" : ""}Efectivo\n\n`
+    message += `${formData.paymentMethod === "transferencia" ? "Transferencia" : "Efectivo"}\n\n`
 
     message += `Método de Entrega:\n`
-    message += `${formData.deliveryMethod === "retiro" ? "✓" : ""}Retiro en local\n`
-    message += `${formData.deliveryMethod === "envio" ? "✓" : ""}Envío a domicilio\n\n`
+    message += `${formData.deliveryMethod === "retiro" ? "Retiro en local" : "Envío a domicilio"}\n\n`
 
     if (formData.additionalInfo) {
       message += `Información Adicional:\n${formData.additionalInfo}\n\n`
     }
-
-    message += `Horario\nL a V: 8 a 18 hs\nS: 8 a 13 hs`
 
     return encodeURIComponent(message)
   }
