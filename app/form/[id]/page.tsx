@@ -49,27 +49,27 @@ export default function FormPage({ params }: { params: { id: string } }) {
   // Format WhatsApp message
   const formatWhatsAppMessage = () => {
     const message = `Pedido - DISTRIBUIDORA LEO:
-⚪ ${product.name} x ${quantity} = $${(product.price * quantity).toLocaleString("es-AR")}
+${product.name} x ${quantity} = $${(product.price * quantity).toLocaleString("es-AR")}
 
 Precio Total: $${(product.price * quantity).toLocaleString("es-AR")}
 
 Método de Pago:
-${formData.paymentMethod === "transferencia" ? "⚫" : "⚪"}Transferencia
-${formData.paymentMethod === "efectivo" ? "⚫" : "⚪"}Efectivo
+${formData.paymentMethod === "transferencia" ? "✓" : ""}Transferencia
+${formData.paymentMethod === "efectivo" ? "✓" : ""}Efectivo
 
 Método de Entrega:
-${formData.deliveryMethod === "retiro" ? "⚫" : "⚪"}Retiro en local
-${formData.deliveryMethod === "envio" ? "⚫" : "⚪"}Envío a domicilio
+${formData.deliveryMethod === "retiro" ? "✓" : ""}Retiro en local
+${formData.deliveryMethod === "envio" ? "✓" : ""}Envío a domicilio
 
 ${
   formData.additionalInfo
-    ? `⚫Información Adicional:
+    ? `Información Adicional:
 ${formData.additionalInfo}
 
 `
     : ""
 }
-⚫Horario
+Horario
 L a V: 8 a 18 hs
 S: 8 a 13 hs`
 
@@ -79,7 +79,7 @@ S: 8 a 13 hs`
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const phoneNumber = "5491112345678" // Replace with your actual WhatsApp number
+    const phoneNumber = "5493834035119" // Número de WhatsApp actualizado
     const message = formatWhatsAppMessage()
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank")
   }

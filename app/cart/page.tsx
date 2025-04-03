@@ -31,24 +31,24 @@ export default function CartPage() {
 
     // Add each item to the message
     items.forEach((item: CartItem) => {
-      message += `⚪ ${item.name} x ${item.quantity} = $${(item.price * item.quantity).toLocaleString("es-AR")}\n`
+      message += `${item.name} x ${item.quantity} = $${(item.price * item.quantity).toLocaleString("es-AR")}\n`
     })
 
     message += `\nPrecio Total: $${totalPrice.toLocaleString("es-AR")}\n\n`
 
     message += `Método de Pago:\n`
-    message += `${formData.paymentMethod === "transferencia" ? "⚫" : "⚪"}Transferencia\n`
-    message += `${formData.paymentMethod === "efectivo" ? "⚫" : "⚪"}Efectivo\n\n`
+    message += `${formData.paymentMethod === "transferencia" ? "✓" : ""}Transferencia\n`
+    message += `${formData.paymentMethod === "efectivo" ? "✓" : ""}Efectivo\n\n`
 
     message += `Método de Entrega:\n`
-    message += `${formData.deliveryMethod === "retiro" ? "⚫" : "⚪"}Retiro en local\n`
-    message += `${formData.deliveryMethod === "envio" ? "⚫" : "⚪"}Envío a domicilio\n\n`
+    message += `${formData.deliveryMethod === "retiro" ? "✓" : ""}Retiro en local\n`
+    message += `${formData.deliveryMethod === "envio" ? "✓" : ""}Envío a domicilio\n\n`
 
     if (formData.additionalInfo) {
-      message += `⚫Información Adicional:\n${formData.additionalInfo}\n\n`
+      message += `Información Adicional:\n${formData.additionalInfo}\n\n`
     }
 
-    message += `⚫Horario\nL a V: 8 a 18 hs\nS: 8 a 13 hs`
+    message += `Horario\nL a V: 8 a 18 hs\nS: 8 a 13 hs`
 
     return encodeURIComponent(message)
   }
@@ -61,7 +61,7 @@ export default function CartPage() {
       return
     }
 
-    const phoneNumber = "5491112345678" // Replace with your actual WhatsApp number
+    const phoneNumber = "5493834035119" // Número de WhatsApp actualizado
     const message = formatWhatsAppMessage()
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank")
   }
