@@ -52,7 +52,7 @@ export function FloatingCartButton() {
             </SheetTitle>
           </SheetHeader>
 
-          <div className="flex-1 overflow-y-auto -mx-4 px-4">
+          <div className="flex-1 overflow-y-auto -mx-4 px-4 scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent hover:scrollbar-thumb-zinc-300">
             {items.length > 0 ? (
               <div className="space-y-3">
                 {items.map((item) => (

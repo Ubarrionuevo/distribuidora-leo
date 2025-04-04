@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { Menu, Search, X, Clock, MapPin, Phone, ArrowRight, ExternalLink } from "lucide-react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
+import { Menu, Search, X, Clock, MapPin, Phone, ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -9,43 +9,50 @@ import { useRouter } from "next/navigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { CartButton } from "@/components/cart-button"
 import { FloatingCartButton } from "@/components/floating-cart-button"
+import { CategoryCard } from "@/components/category-card"
+import { CategorySkeletonGrid } from "@/components/category-skeleton"
+import { useStore } from "@/store/useStore"
 
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState<any[]>([])
-  const [showResults, setShowResults] = useState(false)
   const [isHoursModalOpen, setIsHoursModalOpen] = useState(false)
-  const searchRef = useRef<HTMLDivElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
+  
+  const { categories, isLoading, error, initializeCategories, isInitialized } = useStore()
 
-  // Function to handle search
-  const handleSearch = () => {
+  // Inicializar categorías solo una vez
+  useEffect(() => {
+    if (!isInitialized) {
+      initializeCategories()
+    }
+  }, [initializeCategories, isInitialized])
+
+  // Memoizar la función de búsqueda
+  const handleSearch = useCallback(() => {
     if (searchQuery.trim() === "") {
-      setSearchResults([])
-      setShowResults(false)
+      setIsSearchOpen(false)
       return
     }
 
-    // Search through all categories and products
     const query = searchQuery.toLowerCase()
-    const matchingCategories = categories.filter((category) => category.name.toLowerCase().includes(query))
+    const matchingCategory = categories.find((category) => 
+      category.name.toLowerCase().includes(query)
+    )
 
-    if (matchingCategories.length > 0) {
-      // If we find a matching category, navigate to it
-      router.push(`/category/${matchingCategories[0].slug}`)
+    if (matchingCategory) {
+      router.push(`/category/${matchingCategory.slug}`)
       setIsSearchOpen(false)
       setSearchQuery("")
       return
     }
 
-    // If no categories match, we could implement product search here
-    // For now, just close the search
     setIsSearchOpen(false)
     setSearchQuery("")
-  }
+  }, [searchQuery, categories, router])
 
-  // Close search when clicking outside
+  // Cerrar búsqueda al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
@@ -59,10 +66,17 @@ export default function Home() {
     }
   }, [])
 
+  // Memoizar las categorías para evitar re-renders innecesarios
+  const categoryCards = useMemo(() => {
+    return categories.map((category) => (
+      <CategoryCard key={category.id} category={category} />
+    ))
+  }, [categories])
+
   return (
     <div className="flex min-h-screen flex-col bg-white pb-20">
       {/* Header */}
-      <header className="w-full border-b bg-white text-zinc-900">
+      <header className="w-full border-b bg-white text-zinc-900 sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 flex h-14 items-center justify-between">
           {/* Mobile Menu - Only visible on mobile */}
           <div className="lg:hidden">
@@ -287,11 +301,15 @@ export default function Home() {
           <div className="container px-4 flex justify-center">
             <div className="w-full max-w-6xl">
               <h2 className="text-xl font-bold mb-4 text-zinc-900 text-center">Categorías</h2>
-              <div className="flex flex-col space-y-3 lg:space-y-0 lg:grid lg:grid-cols-3 xl:grid-cols-4 lg:gap-4">
-                {categories.map((category) => (
-                  <CategoryCard key={category.id} category={category} />
-                ))}
-              </div>
+              {isLoading ? (
+                <CategorySkeletonGrid />
+              ) : error ? (
+                <div className="text-center text-red-500">{error}</div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {categoryCards}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -299,418 +317,6 @@ export default function Home() {
 
       <FloatingCartButton />
     </div>
-  )
-}
-
-interface Category {
-  id: number
-  name: string
-  image: string
-  slug: string
-  emoji: string
-}
-
-const categories: Category[] = [
-  {
-    id: 1,
-    name: "Cervezas",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "cervezas",
-    emoji: "🍻",
-  },
-  {
-    id: 2,
-    name: "Gaseosas",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "gaseosas",
-    emoji: "🥤",
-  },
-  {
-    id: 3,
-    name: "Saborizadas y Jugos",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "saborizadas-jugos",
-    emoji: "🧃",
-  },
-  {
-    id: 4,
-    name: "Aguas y Sodas",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "aguas-sodas",
-    emoji: "🫗",
-  },
-  {
-    id: 5,
-    name: "Aperitivos",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "aperitivos",
-    emoji: "🍹",
-  },
-  {
-    id: 6,
-    name: "Espumantes y Whisky",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "espumantes-whisky",
-    emoji: "🍾",
-  },
-  {
-    id: 7,
-    name: "Energizantes",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "energizantes",
-    emoji: "🪫",
-  },
-  {
-    id: 8,
-    name: "Vinos",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "vinos",
-    emoji: "🍷",
-  },
-  {
-    id: 9,
-    name: "Yerbas",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "yerbas",
-    emoji: "🧉",
-  },
-  {
-    id: 10,
-    name: "Harina",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "harina",
-    emoji: "🥖",
-  },
-  {
-    id: 11,
-    name: "Puré de Tomate",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "pure-tomate",
-    emoji: "🍅",
-  },
-  {
-    id: 12,
-    name: "Arroz",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "arroz",
-    emoji: "🍚",
-  },
-  {
-    id: 13,
-    name: "Fideos",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "fideos",
-    emoji: "🍝",
-  },
-  {
-    id: 14,
-    name: "Panificados",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "panificados",
-    emoji: "🍞",
-  },
-  {
-    id: 15,
-    name: "Galletitas",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "galletitas",
-    emoji: "🍪",
-  },
-  {
-    id: 16,
-    name: "Snacks y Golosinas",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "snacks-golosinas",
-    emoji: "🥔",
-  },
-  {
-    id: 17,
-    name: "Papeles",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "papeles",
-    emoji: "🧻",
-  },
-  {
-    id: 18,
-    name: "Limpieza y Perfumería",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "limpieza-perfumeria",
-    emoji: "🧼",
-  },
-  {
-    id: 19,
-    name: "Otros",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "otros",
-    emoji: "💥",
-  },
-  {
-    id: 20,
-    name: "Electrodomésticos",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "electrodomesticos",
-    emoji: "🔌",
-  },
-]
-
-function CategoryCard({ category }: { category: Category }) {
-  return (
-    <Link
-      href={`/category/${category.slug}`}
-      className="group relative overflow-hidden rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full h-[120px] lg:h-[200px]"
-    >
-      <div className="absolute inset-0">
-        {category.slug === "cervezas" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1608270586620-248524c67de9?q=80&w=2070&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "gaseosas" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?q=80&w=1974&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "saborizadas-jugos" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1600271886742-f049cd451bba?q=80&w=2187&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "aguas-sodas" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1560023907-5f339617ea30?q=80&w=2070&auto=format&fit=crop')`
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "aperitivos" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1598373187432-c1ff06874ce8?q=80&w=2070&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "espumantes-whisky" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1569529465841-dfecdab7503b?q=80&w=2070&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "energizantes" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=2070&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "vinos" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?q=80&w=1974&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "pure-tomate" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1546554137-f86b9593a222?q=80&w=2067&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "arroz" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=2070&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "fideos" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1603729362753-f8162ac6c3df?q=80&w=1974&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "panificados" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2072&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "galletitas" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1999&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "snacks-golosinas" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1621939514649-280e2ee25f60?q=80&w=2070&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "papeles" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1584556812952-905ffd0c611a?q=80&w=2070&auto=format&fit=crop')`
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "limpieza-perfumeria" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1563453392212-326f5e854473?q=80&w=2070&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "electrodomesticos" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1601598851547-4302969d0614?q=80&w=1964&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "otros" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?q=80&w=2069&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "yerbas" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1573739022854-abceaeb585dc?q=80&w=1974&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : category.slug === "harina" ? (
-          <>
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=2070&auto=format&fit=crop')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
-        )}
-      </div>
-      <div className="relative h-full p-4 lg:p-6 flex flex-col justify-between">
-        <h3 className="text-lg lg:text-xl font-medium text-white flex items-center">
-          <span className="mr-2 text-xl lg:text-3xl">{category.emoji}</span> {category.name}
-        </h3>
-        <div className="flex justify-end">
-          <div className="bg-[#e63946] text-white text-sm px-3 py-1 lg:px-4 lg:py-2 rounded-full flex items-center gap-1 group-hover:bg-[#d62b39] transition-colors">
-            Ver más <ArrowRight className="h-4 w-4" />
-          </div>
-        </div>
-      </div>
-    </Link>
   )
 }
 
