@@ -76,7 +76,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-white pb-20">
       {/* Header */}
-      <header className="w-full border-b bg-white text-zinc-900 sticky top-0 z-50">
+      <header className="w-full border-b bg-white/80 backdrop-blur-sm text-zinc-900 fixed top-0 left-0 right-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 flex h-14 items-center justify-between">
           {/* Mobile Menu - Only visible on mobile */}
           <div className="lg:hidden">
@@ -89,23 +89,10 @@ export default function Home() {
               </SheetTrigger>
               <SheetContent side="left" className="w-[300px] bg-white p-0">
                 <SheetHeader className="p-4 pb-2">
-                  <SheetTitle>Menú Principal</SheetTitle>
+                  <SheetTitle>Distribuidora Leo</SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col p-4">
-                  <Link href="/" className="py-2 text-zinc-600 hover:text-zinc-900 transition-colors">
-                    Inicio
-                  </Link>
-                  <Link href="/cart" className="py-2 text-zinc-600 hover:text-zinc-900 transition-colors">
-                    Mi Carrito
-                  </Link>
-                  <Link href="#" className="py-2 text-zinc-600 hover:text-zinc-900 transition-colors">
-                    Mis Pedidos
-                  </Link>
-                  <Link href="#" className="py-2 text-zinc-600 hover:text-zinc-900 transition-colors">
-                    Contacto
-                  </Link>
-
-                  <div className="mt-6 pt-6 border-t border-zinc-200">
+                  <div className="mb-6">
                     <div className="flex items-start mb-4">
                       <MapPin className="h-5 w-5 text-[#e63946] mr-2 mt-0.5 flex-shrink-0" />
                       <div>
@@ -221,81 +208,81 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Status Banner */}
-      <Dialog open={isHoursModalOpen} onOpenChange={setIsHoursModalOpen}>
-        <DialogTrigger asChild>
-          <div className="bg-red-50 text-red-900 cursor-pointer hover:bg-red-100 transition-colors">
-            <div className="container py-2 px-4 flex items-center justify-center text-center">
-              <Clock className="h-4 w-4 flex-shrink-0 mr-2" />
-              <div>
-                <p className="font-medium">Lista de precios actualizada: 20/03/25</p>
-                <p className="text-sm">Hacé click para consultar nuestros horarios</p>
+      <main className="flex-1 bg-zinc-50 mt-28">
+        {/* Status Banner */}
+        <Dialog open={isHoursModalOpen} onOpenChange={setIsHoursModalOpen}>
+          <DialogTrigger asChild>
+            <div className="bg-red-50 text-red-900 cursor-pointer hover:bg-red-100 transition-colors fixed top-14 left-0 right-0 z-40">
+              <div className="container py-2 px-4 flex items-center justify-center text-center">
+                <Clock className="h-4 w-4 flex-shrink-0 mr-2" />
+                <div>
+                  <p className="font-medium">Lista de precios actualizada: 20/03/25</p>
+                  <p className="text-sm">Hacé click para consultar nuestros horarios</p>
+                </div>
               </div>
             </div>
-          </div>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Horarios de Atención</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="bg-red-50 p-3 rounded-md">
-                <h3 className="font-medium text-zinc-900">Lunes a Viernes</h3>
-                <p className="text-zinc-600">8:00 a 18:00 hs</p>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Horarios de Atención</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div className="bg-red-50 p-3 rounded-md">
+                  <h3 className="font-medium text-zinc-900">Lunes a Viernes</h3>
+                  <p className="text-zinc-600">8:00 a 18:00 hs</p>
+                </div>
+                <div className="bg-red-50 p-3 rounded-md">
+                  <h3 className="font-medium text-zinc-900">Sábados</h3>
+                  <p className="text-zinc-600">8:00 a 13:00 hs</p>
+                </div>
               </div>
-              <div className="bg-red-50 p-3 rounded-md">
-                <h3 className="font-medium text-zinc-900">Sábados</h3>
-                <p className="text-zinc-600">8:00 a 13:00 hs</p>
+              <div className="bg-red-50 p-3 rounded-md text-center">
+                <h3 className="font-medium text-zinc-900">Domingos y Feriados</h3>
+                <p className="text-zinc-600">Cerrado</p>
+              </div>
+              <div className="pt-2 text-center text-sm text-zinc-500">
+                Para consultas fuera de horario, puede enviarnos un mensaje por WhatsApp al +54 9 11 3155-3407
               </div>
             </div>
-            <div className="bg-red-50 p-3 rounded-md text-center">
-              <h3 className="font-medium text-zinc-900">Domingos y Feriados</h3>
-              <p className="text-zinc-600">Cerrado</p>
-            </div>
-            <div className="pt-2 text-center text-sm text-zinc-500">
-              Para consultas fuera de horario, puede enviarnos un mensaje por WhatsApp al (261) 123-4567
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
 
-      {/* Search Dialog */}
-      <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Buscar Productos</DialogTitle>
-          </DialogHeader>
-          <div className="relative" ref={searchRef}>
-            <input
-              type="search"
-              placeholder="Buscar..."
-              className="h-8 w-[180px] rounded-md border border-zinc-200 bg-white px-3 py-1 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#e63946]"
-              autoFocus
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch()
-                }
-              }}
-            />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-0 text-zinc-400 hover:text-zinc-900 h-8 w-8"
-              onClick={() => {
-                setIsSearchOpen(false)
-                setSearchQuery("")
-              }}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+        {/* Search Dialog */}
+        <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Buscar Productos</DialogTitle>
+            </DialogHeader>
+            <div className="relative" ref={searchRef}>
+              <input
+                type="search"
+                placeholder="Buscar..."
+                className="h-8 w-[180px] rounded-md border border-zinc-200 bg-white px-3 py-1 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#e63946]"
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch()
+                  }
+                }}
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 text-zinc-400 hover:text-zinc-900 h-8 w-8"
+                onClick={() => {
+                  setIsSearchOpen(false)
+                  setSearchQuery("")
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
 
-      <main className="flex-1 bg-zinc-50">
         {/* Categories */}
         <section className="py-6">
           <div className="container px-4 flex justify-center">

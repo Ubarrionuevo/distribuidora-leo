@@ -74,7 +74,7 @@ ${formData.additionalInfo}
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const phoneNumber = "5493834035119" // Número de WhatsApp actualizado
+    const phoneNumber = "5491131553407" // Número de WhatsApp actualizado
     const message = formatWhatsAppMessage()
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank")
   }
