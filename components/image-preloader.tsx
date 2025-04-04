@@ -17,7 +17,7 @@ const categoryImages = {
   "galletitas": "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1999&auto=format&fit=crop",
   "papeles": "https://images.unsplash.com/photo-1584556812952-905ffd0c611a?q=80&w=2070&auto=format&fit=crop",
   "electrodomesticos": "https://images.unsplash.com/photo-1601598851547-4302969d0614?q=80&w=1964&auto=format&fit=crop",
-  "yerbas": "https://images.unsplash.com/photo-1573739022854-abceaeb585dc?q=80&w=1974&auto=format&fit=crop",
+  "yerbas": "https://www.infocampo.com.ar/wp-content/uploads/2019/12/mate.jpg",
   "harina": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=2070&auto=format&fit=crop",
   "panificados": "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2072&auto=format&fit=crop"
 }
